@@ -7,7 +7,7 @@ setup(
     # extract version from module.
     version=__version__,
     description="A Python wrapper for using the PostNL locations SOAP API",
-    long_description=open('README.md').read(),
+    long_description=open('README.rst').read(),
     classifiers=[
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
@@ -30,7 +30,7 @@ setup(
     zip_safe=False,
     # specify dependencies
     install_requires=[
-        "suds",
+        "suds-jurko",
     ],
     # mark test target to require extras.
     extras_require={

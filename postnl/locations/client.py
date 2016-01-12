@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-import suds
+from suds import client, wsse
 import time
 
 from .settings import POSTNL_SETTINGS
@@ -8,11 +8,11 @@ from .settings import POSTNL_SETTINGS
 class Locations(object):
     """Convenience class to communicate with the PostNL SOAP API"""
     def __init__(self):
-        security = suds.wsse.Security()
-        token = suds.wsse.UsernameToken(
+        security = wsse.Security()
+        token = wsse.UsernameToken(
             POSTNL_SETTINGS.get('username'), POSTNL_SETTINGS.get('password'))
         security.tokens.append(token)
-        self.client = suds.client.Client(
+        self.client = client.Client(
             POSTNL_SETTINGS.get('wsdl'), autoblend=True, wsse=security)
 
     def create_message(self):
