@@ -2,21 +2,26 @@ from datetime import datetime, timedelta
 from suds import client, wsse
 import time
 
-from .settings import POSTNL_SETTINGS
+from .utils import recursive_asdict
 
 
 class Locations(object):
     """Convenience class to communicate with the PostNL SOAP API"""
-    def __init__(self):
+
+    def __init__(self, settings):
+        self.settings = settings
         security = wsse.Security()
         token = wsse.UsernameToken(
-            POSTNL_SETTINGS.get('username'), POSTNL_SETTINGS.get('password'))
+            self.settings.get('username'), self.settings.get('password'))
         security.tokens.append(token)
+        # settings faults to False makes sure we can catch the server side
+        # exception message as well
         self.client = client.Client(
-            POSTNL_SETTINGS.get('wsdl'), autoblend=True, wsse=security)
+            self.settings.get('wsdl'), autoblend=True,
+            wsse=security, faults=False)
 
     def create_message(self):
-        # the PostNL API needs a message somehow
+        """Create a message with a timestamp and unique id for the request"""
         message = self.client.factory.create("ns0:Message")
         message.MessageID = int(time.time() * 1000)
         message.MessageTimeStamp = time.strftime(
@@ -24,20 +29,20 @@ class Locations(object):
         return message
 
     def create_location(self, postalcode, deliverydate):
+        """Creates a location object with request parameters"""
         location = self.client.factory.create("ns0:Location")
         location.Postalcode = postalcode
         location.DeliveryDate = deliverydate.strftime("%d-%m-%Y")
-        location.AllowSundaySorting = True
+        location.AllowSundaySorting = self.settings.get(
+            'allow_sunday_sorting', True)
 
-        # TODO: add to settings and document it there
         delivery_options = self.client.factory.create("ns3:ArrayOfstring")
-        delivery_options.string = ["PG"]
+        delivery_options.string = self.settings.get('delivery_options', ["PG"])
         location.DeliveryOptions = delivery_options
 
-        # TODO: add to settings and document it there
         options = self.client.factory.create("ns3:ArrayOfstring")
-        options.string = [
-            "Daytime", "Evening", "Morning", "Noon", "Sunday", "Afternoon"]
+        options.string = self.settings.get('options', ["Daytime"])
+
         location.Options = options
         return location
 
@@ -51,12 +56,15 @@ class Locations(object):
         message = self.create_message()
 
         response = self.client.service.GetNearestLocations(
-            POSTNL_SETTINGS.get('countrycode'),
+            self.settings.get('countrycode'),
             location,
             message
         )
 
-        result = []
-        for response_location in response.GetLocationsResult.ResponseLocation:
-            result.append(response_location.Name.title())
-        return result
+        # response[0] is the http status code
+        if response[0] > 400:
+            # an error occured
+            return response[0], recursive_asdict(response[1])
+
+        return response[0], recursive_asdict(
+            response[1])['getlocationsresult']['responselocation']

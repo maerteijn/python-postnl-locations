@@ -8,5 +8,11 @@ python:
     - '2.7'
     - '3.5'
 
+before_install:
+    - pip install codecov
+
 script:
     - make test
+
+after_success:
+  - codecov

@@ -9,14 +9,17 @@ here: `python-postnl-locations`_.
 .. image:: https://travis-ci.org/maerteijn/python-postnl-locations.svg?branch=master
     :target: https://travis-ci.org/maerteijn/python-postnl-locations
 
+.. image:: http://codecov.io/github/maerteijn/python-postnl-locations/coverage.svg?branch=master
+    :alt: Coverage
+    :target: http://codecov.io/github/maerteijn/python-postnl-locations/
+
 
 Compatibility
 =============
 
-This package is depending on `suds`, a relative old SOAP client (but still the best) for python2.
-`suds-jurko` is a fully compatible version of the original package with some bug fixes 
-and speed improvements, and has support for python3 as well, so this package 
-depends on it. (The `suds-py3` fork still has some issues).
+This package is depending on ``suds-jurko`` , a fully compatible version of the original 
+package with some bug fixes and speed improvements, and has support for python3 as well. 
+So this package depends on it (``suds-py3`` still has some compatibility issues).
 
 
 Usage
@@ -24,9 +27,9 @@ Usage
 
 To use this package follow these steps:
 
-1. Install the `postnl-locations` python egg someway. (`pip install postnl-locations`)
-3. In your project, patch the settings from the package with your settings 
-(username and password are needed to communicate):
+1. Install this python package someway. (``pip install postnl-locations``)
+
+2. In your project, create a settings dictionary with at least the following parameters:
 
 .. code-block:: python
 
@@ -39,14 +42,17 @@ To use this package follow these steps:
       'password': "my-sha1-hashed-password"
   }
 
-  import postnl.locations.settings
-  postnl.locations.settings.POSTNL_SETTINGS = MY_SETTINGS
-
 3. Use the client as following:
 
 .. code-block:: python
 
   from postnl.locations.client import Locations
   
-  locations = Locations()
-  my_locations = locations.nearest_locations(postcode="6821AD")
+  locations = Locations(settings=MY_SETTINGS)
+  my_locations = locations.nearest_locations(postalcode="6821AD")
+
+
+Take a look at the `settings.py`_ for more options.
+
+.. _`settings.py`: https://github.com/maerteijn/python-postnl-locations/blob/master/postnl/locations/settings.py
+
