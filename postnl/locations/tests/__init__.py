@@ -64,6 +64,22 @@ class TestLocations(TestCase):
         result = self.locations.nearest_locations(postalcode="6821AD")
         self.assertEqual(result, (200, mock_result))
 
+    def test_no_results(self):
+        """Test when the soap service does not find any results"""
+        # first create a mock for the soap result
+        # empty result sets do not have the GetLocationsResult property, so
+        # we just have this mick object
+        mock_object = SudsObject()
+
+        # mock the function call and return a almost like soap object
+        self.locations.client.service.GetNearestLocations = mock.MagicMock()
+        # the first param is the http status code
+        self.locations.client.service.GetNearestLocations.return_value = (200, mock_object)  # noqa
+
+        # do the call
+        result = self.locations.nearest_locations(postalcode="6821 AD")
+        self.assertEqual(result, (200, []))
+
     def test_error_handling(self):
         """See if our client returns the error properly"""
         # let's mock again

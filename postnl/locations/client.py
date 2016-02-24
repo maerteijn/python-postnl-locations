@@ -55,16 +55,19 @@ class Locations(object):
         location = self.create_location(postalcode, tomorrow)
         message = self.create_message()
 
-        response = self.client.service.GetNearestLocations(
+        status_code, result = self.client.service.GetNearestLocations(
             self.settings.get('countrycode'),
             location,
             message
         )
 
-        # response[0] is the http status code
-        if response[0] > 400:
+        if status_code > 400:
             # an error occured
-            return response[0], recursive_asdict(response[1])
+            return status_code, recursive_asdict(result)
 
-        return response[0], recursive_asdict(
-            response[1])['getlocationsresult']['responselocation']
+        data = recursive_asdict(result)
+        # if there are any results, return them
+        if "getlocationsresult" in data:
+            return status_code, data['getlocationsresult']['responselocation']
+        # otherwise, return a empty list
+        return status_code, []
