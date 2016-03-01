@@ -9,16 +9,22 @@ setup(
     description="A Python wrapper for using the PostNL locations SOAP API",
     long_description=open('README.rst').read(),
     classifiers=[
+        'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
         'Operating System :: Unix',
-        'Programming Language :: Python'
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.5',
+        'Topic :: Software Development :: Libraries',
     ],
-    keywords='',
+    keywords='postnl locations pickuppoints',
     author='Martijn Jacobs',
     author_email='martijn@devopsconsulting.nl',
-    url='https://github.com/maerteijn/postnl-locations',
+    url='https://github.com/maerteijn/python-postnl-locations',
     license='BSD',
     # include all packages in the egg, except the tests
     packages=find_packages(
