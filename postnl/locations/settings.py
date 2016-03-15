@@ -9,5 +9,7 @@ POSTNL_SETTINGS = {
     'delivery_options': ["PG"],
     'options': [
         "Daytime", "Evening", "Morning", "Noon", "Sunday", "Afternoon"],
-    'allow_sunday_sorting': True
+    'allow_sunday_sorting': True,
+    # you can specify your own transform class if you like
+    'transform_class': 'postnl.locations.transform.TransformPostNLResults'
 }

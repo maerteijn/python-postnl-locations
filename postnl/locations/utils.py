@@ -1,5 +1,19 @@
 from suds.sudsobject import asdict
 from suds.sax.text import Text
+import importlib
+
+
+def load_class(module_string):
+    """
+    Dynamically load a class from a string:
+
+    >>> from postnl.locations.settings import POSTNL_SETTINGS as settings
+    >>> load_class(settings.get('transform_class'))
+    <class 'postnl.locations.transform.TransformPostNLResults'>
+    """
+    module_name, class_name = module_string.rsplit(".", 1)
+    module = importlib.import_module(module_name)
+    return getattr(module, class_name)
 
 
 def recursive_asdict(d):

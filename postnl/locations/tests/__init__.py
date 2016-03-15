@@ -1,4 +1,5 @@
 from unittest import TestCase
+import copy
 from suds.sudsobject import Object as SudsObject
 import mock
 
@@ -13,7 +14,7 @@ mock_result = [{
     'longitude': u'5.91555826407064', 'phonenumber': u'026-4457665',
     'address': {
         'city': u'Arnhem',
-        'remark': u'', 'countrycode': u'Nl',
+        'remark': u'This Is A Remark', 'countrycode': u'Nl',
         'housenr': u'17', 'zipcode': u'6828Ca', 'housenrext': u'A',
         'street': u'Steenstraat'},
     'latitude': u'51.9837221431004',
@@ -26,6 +27,8 @@ mock_result = [{
         'saturday': {'string': [u"09:00-17:00"]}},
     'saleschannel': u'Pkt L', 'locationcode': u'163392'
 }]
+
+another_mock_result = copy.deepcopy(mock_result)
 
 mock_error_result = {
     'faultcode': u'S:Cif Framework Message Interceptor',

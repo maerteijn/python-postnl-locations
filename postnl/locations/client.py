@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from suds import client, wsse
 import time
 
-from .utils import recursive_asdict
+from .utils import recursive_asdict, load_class
 
 
 class Locations(object):
@@ -66,8 +66,17 @@ class Locations(object):
             return status_code, recursive_asdict(result)
 
         data = recursive_asdict(result)
+
         # if there are any results, return them
         if "getlocationsresult" in data:
-            return status_code, data['getlocationsresult']['responselocation']
+            result = data['getlocationsresult']['responselocation']
+            # call the transformer class if it's defined in the settings
+            if 'transform_class' in self.settings:
+                transform_class = load_class(
+                    self.settings.get('transform_class'))
+                transformer = transform_class(result)
+                result = transformer.data
+
+            return status_code, result
         # otherwise, return a empty list
         return status_code, []
