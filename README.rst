@@ -39,7 +39,7 @@ To use this package follow these steps:
       'countrycode': 'NL',
       'username': "my-username",
        # the password is SHA1 hashed
-      'password': "my-sha1-hashed-password"
+      'password': "my-sha1-hashed-password",
   }
 
 3. Use the client as following:
@@ -52,7 +52,7 @@ To use this package follow these steps:
   my_locations = locations.nearest_locations(postalcode="6821AD")
 
 
-Take a look at the `settings.py`_ for more options.
+Take a look at the `settings.py`_ for more options (you can adjust the results with a custom resultstransform claass for example).
 
 .. _`settings.py`: https://github.com/maerteijn/python-postnl-locations/blob/master/postnl/locations/settings.py
 
